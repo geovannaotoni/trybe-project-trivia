@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { fetchToken } from '../services/fetchAPI';
 import { setTokenOnStorage } from '../services/localStorage';
+import { addUserInfo } from '../redux/actions';
+import { connect } from 'react-redux';
 
 class Login extends Component {
   state = {
@@ -29,9 +31,11 @@ class Login extends Component {
   };
 
   handleClickPlay = async () => {
-    const { history } = this.props;
+    const { history, dispatch } = this.props;
+    const { email, name } = this.state;
     const token = await fetchToken();
     setTokenOnStorage(token);
+    dispatch(addUserInfo(email, name));
     history.push('/game');
   };
 
@@ -86,4 +90,4 @@ Login.propTypes = {
   }).isRequired,
 };
 
-export default Login;
+export default connect()(Login);
