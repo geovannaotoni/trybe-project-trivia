@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { fetchToken } from '../services/fetchAPI';
 import { setTokenOnStorage } from '../services/localStorage';
 import { addUserInfo } from '../redux/actions';
-import { connect } from 'react-redux';
 
 class Login extends Component {
   state = {
@@ -87,7 +87,8 @@ class Login extends Component {
 Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
-  }).isRequired,
-};
+  }),
+  dispatch: PropTypes.func,
+}.isRequired;
 
 export default connect()(Login);

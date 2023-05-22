@@ -14,15 +14,19 @@ class Header extends Component {
     const hash = md5(email).toString();
     return (
       <div>
-        <img src={`https://www.gravatar.com/avatar/${hash}`} alt={ email } data-testid='header-profile-picture' />
-        <h1 data-testid='header-player-name'>{name}</h1>
-        <h2 data-testid='header-score'>{ score }</h2>
+        <img
+          src={ `https://www.gravatar.com/avatar/${hash}` }
+          alt={ email }
+          data-testid="header-profile-picture"
+        />
+        <h1 data-testid="header-player-name">{ name }</h1>
+        <h2 data-testid="header-score">{ score }</h2>
       </div>
     );
   }
 }
 
-Header.propTypes = { 
+Header.propTypes = {
   name: PropTypes.string,
 }.isRequired;
 
