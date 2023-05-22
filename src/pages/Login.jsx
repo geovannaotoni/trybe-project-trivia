@@ -1,4 +1,7 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { fetchToken } from '../services/fetchAPI';
+import { setTokenOnStorage } from '../services/localStorage';
 
 class Login extends Component {
   state = {
@@ -25,8 +28,11 @@ class Login extends Component {
     return validationName && validationEmail;
   };
 
-  handleClickPlay = () => {
-
+  handleClickPlay = async () => {
+    const { history } = this.props;
+    const token = await fetchToken();
+    setTokenOnStorage(token);
+    history.push('/game');
   };
 
   render() {
@@ -61,5 +67,11 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 
 export default Login;
