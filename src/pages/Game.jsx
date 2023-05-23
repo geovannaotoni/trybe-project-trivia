@@ -5,6 +5,8 @@ import Header from '../components/header';
 import { fetchApiQuestions } from '../services/fetchAPI';
 import '../styles/Game.css';
 
+const TIMER_INTERVAL = 1000; // Intervalo do timer em milissegundos
+
 class Game extends Component {
   state = {
     questions: [],
@@ -12,10 +14,16 @@ class Game extends Component {
     shuffledOptions: [],
     correctAnswer: '',
     btnClick: undefined,
+    timer: 30,
   };
 
   async componentDidMount() {
     await this.getQuestionsFromAPI();
+    this.startTimer();
+  }
+
+  componentWillUnmount() {
+    this.stopTimer();
   }
 
   getQuestionsFromAPI = async () => {
@@ -25,23 +33,23 @@ class Game extends Component {
     if (responseCode === ERROR_CODE) {
       history.push('/');
     }
-    this.setState({
-      questions: results,
-    }, () => {
-      this.setAnswersOnState();
-    });
+    this.setState(
+      {
+        questions: results,
+      },
+      () => {
+        this.setAnswersOnState();
+      },
+    );
   };
 
   setAnswersOnState = () => {
     const { questions, indexQuestion } = this.state;
     const question = questions[indexQuestion];
-    const {
-      correct_answer: correctAnswer,
-      incorrect_answers: incorrectAnswers,
-    } = question;
+    const { correct_answer: correctAnswer,
+      incorrect_answers: incorrectAnswers } = question;
     const allAnswers = [...incorrectAnswers, correctAnswer];
     const shuffledOptions = this.shuffleArray(allAnswers);
-    // console.log(allAnswers);
     this.setState({
       correctAnswer,
       shuffledOptions,
@@ -49,11 +57,40 @@ class Game extends Component {
   };
 
   shuffleArray = (array) => {
-    // após sugestão do Prof João
     const newArray = [...array];
     const randomSort = () => Math.random() - 1 / 2;
     const shuffledArray = newArray.sort(randomSort);
     return shuffledArray;
+  };
+
+  startTimer = () => {
+    // Inicia o temporizador usando setInterval
+    this.timerInterval = setInterval(() => {
+      this.setState((prevState) => {
+        // Verifica se o temporizador chegou a 1 segundo ou menos
+        if (prevState.timer <= 1) {
+          // Se o temporizador chegou a 1 segundo ou menos, para o temporizador e desabilita os botões
+          this.stopTimer();
+          this.disableButtons();
+        }
+        // Atualiza o estado do componente, decrementando o valor do temporizador de 1 em 1 segundo
+        return { timer: prevState.timer - 1 };
+      });
+    }, TIMER_INTERVAL); // Define o intervalo do temporizador em milissegundos
+  };
+
+  stopTimer = () => {
+    // Para o temporizador usando clearInterval e passando o ID do intervalo
+    clearInterval(this.timerInterval);
+  };
+
+  disableButtons = () => {
+    // Obtem todos os botões cujo atributo data-testid começa com "correct-answer"
+    const buttons = document.querySelectorAll('button[data-testid^="correct-answer"]');
+    // Itera sobre cada botão desabilitando e definindo a propriedade disabled como true
+    buttons.forEach((button) => {
+      button.disabled = true;
+    });
   };
 
   handleClick = () => {
@@ -63,7 +100,13 @@ class Game extends Component {
   };
 
   render() {
-    const { questions } = this.state;
+    const { questions,
+      indexQuestion,
+      shuffledOptions,
+      correctAnswer,
+      btnClick,
+      timer } = this.state;
+
     if (questions.length === 0) {
       return (
         <div>
@@ -72,25 +115,32 @@ class Game extends Component {
         </div>
       );
     }
-    const { indexQuestion, shuffledOptions, correctAnswer, btnClick } = this.state;
+
     const { category, question } = questions[indexQuestion];
+
     return (
       <div>
         <Header />
         <p data-testid="question-category">{category}</p>
         <p data-testid="question-text">{question}</p>
+        <p>
+          Timer:
+          {' '}
+          {timer}
+          {' '}
+          seconds
+        </p>
         <div data-testid="answer-options">
           {shuffledOptions.map((option, index) => (
             <button
               key={ index }
               type="button"
-              data-testid={
-                option === correctAnswer ? 'correct-answer' : `wrong-answer-${index}`
-              }
+              data-testid={ option
+                === correctAnswer ? 'correct-answer' : `wrong-answer-${index}` }
               onClick={ this.handleClick }
-              className={
-                btnClick && (option === correctAnswer ? 'correct' : 'incorrect')
-              }
+              className={ btnClick && (option
+                 === correctAnswer ? 'correct' : 'incorrect') }
+              disabled={ timer === 0 }
             >
               {option}
             </button>
