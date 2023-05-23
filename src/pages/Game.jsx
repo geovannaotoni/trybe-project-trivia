@@ -18,6 +18,7 @@ class Game extends Component {
     nextQuestion: 0,
     timer: 30,
     score: 0,
+    buttonsDisabled: false,
     next: true,
   };
 
@@ -75,7 +76,6 @@ class Game extends Component {
         if (prevState.timer <= 1) {
           // Se o temporizador chegou a 1 segundo ou menos, para o temporizador e desabilita os botões
           this.stopTimer();
-          this.disableButtons();
         }
         // Atualiza o estado do componente, decrementando o valor do temporizador de 1 em 1 segundo
         return { timer: prevState.timer - 1 };
@@ -86,15 +86,7 @@ class Game extends Component {
   stopTimer = () => {
     // Para o temporizador usando clearInterval e passando o ID do intervalo
     clearInterval(this.timerInterval);
-  };
-
-  disableButtons = () => {
-    // Obtem todos os botões cujo atributo data-testid começa com "correct-answer"
-    const buttons = document.querySelectorAll('button[data-testid^="correct-answer"]');
-    // Itera sobre cada botão desabilitando e definindo a propriedade disabled como true
-    buttons.forEach((button) => {
-      button.disabled = true;
-    });
+    this.setState({ buttonsDisabled: true });
   };
 
   difficultyCheck = () => {
@@ -128,16 +120,14 @@ class Game extends Component {
 
   handleClick = (event) => {
     const { dispatch } = this.props;
-    const { timer, questions, indexQuestion } = this.state;
+    const { timer, correctAnswer } = this.state;
     const patternPoint = 10;
-    const incorrect = questions[indexQuestion].incorrect_answers;
     const difficultyID = this.difficultyCheck();
     this.setState({
       btnClick: true,
       next: false,
     }, this.stopTimer);
-    const asnwerCheck = incorrect.some((wrongAnswer) => (
-      event.target.innerHTML !== wrongAnswer));
+    const asnwerCheck = event.target.innerHTML === correctAnswer;
     // Verifica se o botão clicado é diferente das respostas erradas. Caso seja, realiza a soma.
     if (asnwerCheck) {
       this.setState((prevState) => {
@@ -171,6 +161,7 @@ class Game extends Component {
       correctAnswer,
       btnClick,
       timer,
+      buttonsDisabled,
       next } = this.state;
 
     if (questions.length === 0) {
@@ -205,8 +196,8 @@ class Game extends Component {
                 === correctAnswer ? 'correct-answer' : `wrong-answer-${index}` }
               onClick={ this.handleClick }
               className={ btnClick && (option
-                 === correctAnswer ? 'correct' : 'incorrect') }
-              disabled={ timer === 0 }
+                === correctAnswer ? 'correct' : 'incorrect') }
+              disabled={ buttonsDisabled }
             >
               {option}
             </button>
