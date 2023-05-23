@@ -82,11 +82,12 @@ describe('Teste na funcionalidade da tela de Login', () => {
       const { pathname } = history.location;
       expect(pathname).toBe('/game');
     });
-    const gameTitle = screen.getByRole('heading',
+    const gameTitle = await screen.findByRole('heading',
     { name: 'Nome Teste' });
     expect(gameTitle).toBeInTheDocument();
 
   })
+
   it('Verifica se ao clicar no botão settings, é realizado o redirecionamento para "/settings" com seu valor correto', async () => {
     const { history } = renderWithRouterAndRedux(<App />)
 
