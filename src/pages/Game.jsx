@@ -15,10 +15,10 @@ class Game extends Component {
     shuffledOptions: [],
     correctAnswer: '',
     btnClick: undefined,
-    nextQuestion: 0,
     timer: 30,
     score: 0,
-    next: true,
+    buttonsDisabled: false,
+    nextVisible: true,
   };
 
   async componentDidMount() {
@@ -75,7 +75,6 @@ class Game extends Component {
         if (prevState.timer <= 1) {
           // Se o temporizador chegou a 1 segundo ou menos, para o temporizador e desabilita os botões
           this.stopTimer();
-          this.disableButtons();
         }
         // Atualiza o estado do componente, decrementando o valor do temporizador de 1 em 1 segundo
         return { timer: prevState.timer - 1 };
@@ -86,15 +85,7 @@ class Game extends Component {
   stopTimer = () => {
     // Para o temporizador usando clearInterval e passando o ID do intervalo
     clearInterval(this.timerInterval);
-  };
-
-  disableButtons = () => {
-    // Obtem todos os botões cujo atributo data-testid começa com "correct-answer"
-    const buttons = document.querySelectorAll('button[data-testid^="correct-answer"]');
-    // Itera sobre cada botão desabilitando e definindo a propriedade disabled como true
-    buttons.forEach((button) => {
-      button.disabled = true;
-    });
+    this.setState({ buttonsDisabled: true });
   };
 
   difficultyCheck = () => {
@@ -128,16 +119,14 @@ class Game extends Component {
 
   handleClick = (event) => {
     const { dispatch } = this.props;
-    const { timer, questions, indexQuestion } = this.state;
+    const { timer, correctAnswer } = this.state;
     const patternPoint = 10;
-    const incorrect = questions[indexQuestion].incorrect_answers;
     const difficultyID = this.difficultyCheck();
     this.setState({
       btnClick: true,
-      next: false,
+      nextVisible: false,
     }, this.stopTimer);
-    const asnwerCheck = incorrect.some((wrongAnswer) => (
-      event.target.innerHTML !== wrongAnswer));
+    const asnwerCheck = event.target.innerHTML === correctAnswer;
     // Verifica se o botão clicado é diferente das respostas erradas. Caso seja, realiza a soma.
     if (asnwerCheck) {
       this.setState((prevState) => {
@@ -152,16 +141,24 @@ class Game extends Component {
   };
 
   nextQuestion = () => {
-    const { questions, nextQuestion } = this.state;
-    if (nextQuestion < questions.length - 1) {
+    const { indexQuestion } = this.state;
+    const { history } = this.props;
+    const questionsLength = 4;
+    if (indexQuestion === questionsLength) {
+      history.push('/feedbacks');
+    } else {
       this.setState((prevState) => ({
-        nextQuestion: prevState.nextQuestion + 1,
+        indexQuestion: prevState.indexQuestion + 1,
       }));
+      this.setAnswersOnState();
+      this.setState({
+        nextVisible: true,
+        buttonsDisabled: false,
+        btnClick: undefined,
+        timer: 30,
+      });
+      this.startTimer();
     }
-    this.setAnswersOnState();
-    this.setState({
-      next: true,
-    });
   };
 
   render() {
@@ -171,7 +168,8 @@ class Game extends Component {
       correctAnswer,
       btnClick,
       timer,
-      next } = this.state;
+      buttonsDisabled,
+      nextVisible } = this.state;
 
     if (questions.length === 0) {
       return (
@@ -205,13 +203,13 @@ class Game extends Component {
                 === correctAnswer ? 'correct-answer' : `wrong-answer-${index}` }
               onClick={ this.handleClick }
               className={ btnClick && (option
-                 === correctAnswer ? 'correct' : 'incorrect') }
-              disabled={ timer === 0 }
+                === correctAnswer ? 'correct' : 'incorrect') }
+              disabled={ buttonsDisabled }
             >
               {option}
             </button>
           ))}
-          { next ? (
+          { nextVisible ? (
             <div />
           ) : (
             <button
