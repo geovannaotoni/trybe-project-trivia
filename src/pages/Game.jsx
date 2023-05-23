@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import Header from '../components/header';
 import { fetchApiQuestions } from '../services/fetchAPI';
+import '../styles/Game.css';
 
 class Game extends Component {
   state = {
@@ -10,6 +11,7 @@ class Game extends Component {
     indexQuestion: 0,
     shuffledOptions: [],
     correctAnswer: '',
+    btnClick: undefined,
   };
 
   async componentDidMount() {
@@ -39,7 +41,7 @@ class Game extends Component {
     } = question;
     const allAnswers = [...incorrectAnswers, correctAnswer];
     const shuffledOptions = this.shuffleArray(allAnswers);
-    console.log(allAnswers);
+    // console.log(allAnswers);
     this.setState({
       correctAnswer,
       shuffledOptions,
@@ -54,6 +56,12 @@ class Game extends Component {
     return shuffledArray;
   };
 
+  handleClick = () => {
+    this.setState({
+      btnClick: true,
+    });
+  };
+
   render() {
     const { questions } = this.state;
     if (questions.length === 0) {
@@ -64,7 +72,7 @@ class Game extends Component {
         </div>
       );
     }
-    const { indexQuestion, shuffledOptions, correctAnswer } = this.state;
+    const { indexQuestion, shuffledOptions, correctAnswer, btnClick } = this.state;
     const { category, question } = questions[indexQuestion];
     return (
       <div>
@@ -78,6 +86,10 @@ class Game extends Component {
               type="button"
               data-testid={
                 option === correctAnswer ? 'correct-answer' : `wrong-answer-${index}`
+              }
+              onClick={ this.handleClick }
+              className={
+                btnClick && (option === correctAnswer ? 'correct' : 'incorrect')
               }
             >
               {option}
