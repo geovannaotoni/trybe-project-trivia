@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import Header from '../components/header';
 import { fetchApiQuestions } from '../services/fetchAPI';
 import '../styles/Game.css';
+import { addScore } from '../redux/actions';
 
 const TIMER_INTERVAL = 1000; // Intervalo do timer em milissegundos
 
@@ -15,6 +16,7 @@ class Game extends Component {
     correctAnswer: '',
     btnClick: undefined,
     timer: 30,
+    score: 0,
   };
 
   async componentDidMount() {
@@ -93,10 +95,57 @@ class Game extends Component {
     });
   };
 
-  handleClick = () => {
+  difficultyCheck = () => {
+    // Define o valor da dificuldade da questão
+    const { questions, indexQuestion } = this.state;
+    const { difficulty } = questions[indexQuestion];
+
+    const difficultyValue = {
+      easy: 1,
+      medium: 2,
+      hard: 3,
+    };
+
+    let difficultyID = 0;
+    switch (difficulty) {
+    case 'easy':
+      difficultyID = difficultyValue.easy;
+      break;
+    case 'medium':
+      difficultyID = difficultyValue.medium;
+      break;
+    case 'hard':
+      difficultyID = difficultyValue.hard;
+      break;
+    default:
+      difficultyID = 0;
+    }
+
+    return difficultyID;
+  };
+
+  handleClick = (event) => {
+    const { dispatch } = this.props;
+    const { timer, questions, indexQuestion } = this.state;
+    const patternPoint = 10;
+    const incorrect = questions[indexQuestion].incorrect_answers;
+    const difficultyID = this.difficultyCheck();
     this.setState({
       btnClick: true,
-    });
+    }, this.stopTimer);
+    const asnwerCheck = incorrect.some((wrongAnswer) => (
+      event.target.innerHTML !== wrongAnswer));
+    // Verifica se o botão clicado é diferente das respostas erradas. Caso seja, realiza a soma.
+    if (asnwerCheck) {
+      this.setState((prevState) => {
+        const point = patternPoint + (timer + difficultyID);
+        const newScore = prevState.score + point;
+        dispatch(addScore(newScore));
+        return {
+          score: newScore,
+        };
+      });
+    }
   };
 
   render() {
@@ -152,6 +201,7 @@ class Game extends Component {
 }
 
 Game.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
