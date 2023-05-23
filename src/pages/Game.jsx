@@ -15,11 +15,10 @@ class Game extends Component {
     shuffledOptions: [],
     correctAnswer: '',
     btnClick: undefined,
-    nextQuestion: 0,
     timer: 30,
     score: 0,
     buttonsDisabled: false,
-    next: true,
+    nextVisible: true,
   };
 
   async componentDidMount() {
@@ -125,7 +124,7 @@ class Game extends Component {
     const difficultyID = this.difficultyCheck();
     this.setState({
       btnClick: true,
-      next: false,
+      nextVisible: false,
     }, this.stopTimer);
     const asnwerCheck = event.target.innerHTML === correctAnswer;
     // Verifica se o botão clicado é diferente das respostas erradas. Caso seja, realiza a soma.
@@ -142,16 +141,24 @@ class Game extends Component {
   };
 
   nextQuestion = () => {
-    const { questions, nextQuestion } = this.state;
-    if (nextQuestion < questions.length - 1) {
+    const { indexQuestion } = this.state;
+    const { history } = this.props;
+    const questionsLength = 4;
+    if (indexQuestion === questionsLength) {
+      history.push('/feedbacks');
+    } else {
       this.setState((prevState) => ({
-        nextQuestion: prevState.nextQuestion + 1,
+        indexQuestion: prevState.indexQuestion + 1,
       }));
+      this.setAnswersOnState();
+      this.setState({
+        nextVisible: true,
+        buttonsDisabled: false,
+        btnClick: undefined,
+        timer: 30,
+      });
+      this.startTimer();
     }
-    this.setAnswersOnState();
-    this.setState({
-      next: true,
-    });
   };
 
   render() {
@@ -162,7 +169,7 @@ class Game extends Component {
       btnClick,
       timer,
       buttonsDisabled,
-      next } = this.state;
+      nextVisible } = this.state;
 
     if (questions.length === 0) {
       return (
@@ -202,7 +209,7 @@ class Game extends Component {
               {option}
             </button>
           ))}
-          { next ? (
+          { nextVisible ? (
             <div />
           ) : (
             <button
