@@ -15,8 +15,10 @@ class Game extends Component {
     shuffledOptions: [],
     correctAnswer: '',
     btnClick: undefined,
+    nextQuestion: 0,
     timer: 30,
     score: 0,
+    next: true,
   };
 
   async componentDidMount() {
@@ -132,6 +134,7 @@ class Game extends Component {
     const difficultyID = this.difficultyCheck();
     this.setState({
       btnClick: true,
+      next: false,
     }, this.stopTimer);
     const asnwerCheck = incorrect.some((wrongAnswer) => (
       event.target.innerHTML !== wrongAnswer));
@@ -148,13 +151,27 @@ class Game extends Component {
     }
   };
 
+  nextQuestion = () => {
+    const { questions, nextQuestion } = this.state;
+    if (nextQuestion < questions.length - 1) {
+      this.setState((prevState) => ({
+        nextQuestion: prevState.nextQuestion + 1,
+      }));
+    }
+    this.setAnswersOnState();
+    this.setState({
+      next: true,
+    });
+  };
+
   render() {
     const { questions,
       indexQuestion,
       shuffledOptions,
       correctAnswer,
       btnClick,
-      timer } = this.state;
+      timer,
+      next } = this.state;
 
     if (questions.length === 0) {
       return (
@@ -194,6 +211,17 @@ class Game extends Component {
               {option}
             </button>
           ))}
+          { next ? (
+            <div />
+          ) : (
+            <button
+              value="Next"
+              onClick={ this.nextQuestion }
+              data-testid="btn-next"
+            >
+              Next
+            </button>
+          )}
         </div>
       </div>
     );
