@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './renderWithRouterAndRedux'
 import Login from '../../pages/Login'
@@ -74,36 +74,32 @@ describe('Teste na funcionalidade da tela de Login', () => {
     userEvent.type(emailInput, 'test@trybe.com');
     userEvent.click(button);
     
-    window.localStorage.setItem('token', '1f2ec3e06819703615e3fd387a2e92bc7bd409a5c8f51953ce4dffe91ee20986')
-    const storedValue = window.localStorage.getItem('token')
-    expect(storedValue).toBe('1f2ec3e06819703615e3fd387a2e92bc7bd409a5c8f51953ce4dffe91ee20986')
 
-    const { pathname } = history.location;
-    expect(pathname).toBe('/game');
-    const aboutTitle = screen.getByRole('heading',
+    await waitFor(() => {
+      window.localStorage.setItem('token', '1f2ec3e06819703615e3fd387a2e92bc7bd409a5c8f51953ce4dffe91ee20986')
+      const storedValue = window.localStorage.getItem('token')
+      expect(storedValue).toBe('1f2ec3e06819703615e3fd387a2e92bc7bd409a5c8f51953ce4dffe91ee20986')
+      const { pathname } = history.location;
+      expect(pathname).toBe('/game');
+    });
+    const gameTitle = screen.getByRole('heading',
     { name: 'Nome Teste' });
-    expect(aboutTitle).toBeInTheDocument();
+    expect(gameTitle).toBeInTheDocument();
 
   })
-  it('', async () => {
-    global.fetch = (url) => {
-      return Promise.resolve({
-        json: () => Promise.resolve({
-          response_code: 0,
-          response_message: "Token Generated Successfully!",
-          token: "1f2ec3e06819703615e3fd387a2e92bc7bd409a5c8f51953ce4dffe91ee20986"
-        })
-      })
-    }
+  it('Verifica se ao clicar no botão settings, é realizado o redirecionamento para "/settings" com seu valor correto', async () => {
+    const { history } = renderWithRouterAndRedux(<App />)
 
-    renderWithRouterAndRedux(<Login />)
-
-    const button = await screen.getByRole('button', { name: /play/i });
+    const button = await screen.findByRole('button', { name: /settings/i });
 
     userEvent.click(button);
-
-    window.localStorage.setItem('token', '1f2ec3e06819703615e3fd387a2e92bc7bd409a5c8f51953ce4dffe91ee20986')
-    const storedValue = window.localStorage.getItem('token')
-    expect(storedValue).toBe('1f2ec3e06819703615e3fd387a2e92bc7bd409a5c8f51953ce4dffe91ee20986')
+    
+    await waitFor(() => {
+      const { pathname } = history.location;
+      expect(pathname).toBe('/settings');
+    });
+    const settingsTitle = screen.getByRole('heading',
+    { name: 'Configurações' });
+    expect(settingsTitle).toBeInTheDocument();
   })
 })
