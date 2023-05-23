@@ -15,9 +15,10 @@ class Game extends Component {
     shuffledOptions: [],
     correctAnswer: '',
     btnClick: undefined,
+    nextQuestion: 0,
     timer: 30,
     score: 0,
-    next: false,
+    next: true,
   };
 
   async componentDidMount() {
@@ -133,7 +134,7 @@ class Game extends Component {
     const difficultyID = this.difficultyCheck();
     this.setState({
       btnClick: true,
-      next: true,
+      next: false,
     }, this.stopTimer);
     const asnwerCheck = incorrect.some((wrongAnswer) => (
       event.target.innerHTML !== wrongAnswer));
@@ -150,21 +151,18 @@ class Game extends Component {
     }
   };
 
-  update = () => {
-    this.setState({ nextQ: true, next: true });
-  };
-
-  time = () => {
-    this.update();
-  };
-
   nextQuestion = () => {
-    this.setState((prevState) => ({
-      indexQuestion: prevState.indexQuestion + 1,
-      nextQ: false,
-    }));
+    const { questions, nextQuestion } = this.state;
+    if (nextQuestion < questions.length - 1) {
+      this.setState((prevState) => ({
+        nextQuestion: prevState.nextQuestion + 1,
+      }));
+    }
+    this.setAnswersOnState();
+    this.setState({
+      next: true,
+    });
   };
-
 
   render() {
     const { questions,
@@ -209,21 +207,21 @@ class Game extends Component {
               className={ btnClick && (option
                  === correctAnswer ? 'correct' : 'incorrect') }
               disabled={ timer === 0 }
-              update={ this.update }
             >
               {option}
             </button>
           ))}
-          {
-          next ? (
-          <button
-          data-testid="btn-next"
-          onClick={ this.nextQuestion }
-          >
-            Next
-            </button> 
-            ): ''
-            }
+          { next ? (
+            <div />
+          ) : (
+            <button
+              value="Next"
+              onClick={ this.nextQuestion }
+              data-testid="btn-next"
+            >
+              Next
+            </button>
+          )}
         </div>
       </div>
     );
