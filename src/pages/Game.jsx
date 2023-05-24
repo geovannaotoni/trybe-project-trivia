@@ -17,6 +17,7 @@ class Game extends Component {
     btnClick: undefined,
     timer: 30,
     score: 0,
+    assertions: 0,
     buttonsDisabled: false,
     nextVisible: true,
   };
@@ -75,6 +76,7 @@ class Game extends Component {
         if (prevState.timer <= 1) {
           // Se o temporizador chegou a 1 segundo ou menos, para o temporizador e desabilita os botões
           this.stopTimer();
+          return { buttonsDisabled: true };
         }
         // Atualiza o estado do componente, decrementando o valor do temporizador de 1 em 1 segundo
         return { timer: prevState.timer - 1 };
@@ -85,7 +87,6 @@ class Game extends Component {
   stopTimer = () => {
     // Para o temporizador usando clearInterval e passando o ID do intervalo
     clearInterval(this.timerInterval);
-    this.setState({ buttonsDisabled: true });
   };
 
   difficultyCheck = () => {
@@ -130,11 +131,13 @@ class Game extends Component {
     // Verifica se o botão clicado é diferente das respostas erradas. Caso seja, realiza a soma.
     if (asnwerCheck) {
       this.setState((prevState) => {
-        const point = patternPoint + (timer + difficultyID);
+        const point = patternPoint + (timer * difficultyID);
         const newScore = prevState.score + point;
-        dispatch(addScore(newScore));
+        const newPoint = prevState.assertions + 1;
+        dispatch(addScore(newScore, newPoint));
         return {
           score: newScore,
+          assertions: newPoint,
         };
       });
     }

@@ -23,7 +23,7 @@ class Header extends Component {
 
 Header.propTypes = {
   name: PropTypes.string,
-  player: PropTypes.number,
+  score: PropTypes.number,
 }.isRequired;
 
 const mapStateToProps = (globalState) => ({
