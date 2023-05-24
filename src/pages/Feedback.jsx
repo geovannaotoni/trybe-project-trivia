@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Header from '../components/header';
 
-class Feedbacks extends Component {
+class Feedback extends Component {
   feedbackMessage() {
     const { assertions } = this.props;
     const hit = 3;
@@ -43,7 +43,7 @@ class Feedbacks extends Component {
   }
 }
 
-Feedbacks.propTypes = {
+Feedback.propTypes = {
   assertions: PropTypes.number,
   score: PropTypes.number,
 }.isRequired;
@@ -53,4 +53,4 @@ const mapStateToProps = (globalState) => ({
   score: globalState.player.score,
 });
 
-export default connect(mapStateToProps)(Feedbacks);
+export default connect(mapStateToProps)(Feedback);

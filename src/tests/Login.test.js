@@ -1,8 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
-import renderWithRouterAndRedux from './renderWithRouterAndRedux'
-import Login from '../../pages/Login'
-import App from '../../App';
+import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux'
+import Login from '../pages/Login'
+import App from '../App';
 
 describe('Teste na funcionalidade da tela de Login', () => {
   it('Verifica se é possível escrever o nome e email nos inputs de texto', async () => {

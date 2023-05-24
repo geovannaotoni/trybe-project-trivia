@@ -4,7 +4,7 @@ import './App.css';
 import Login from './pages/Login';
 import Game from './pages/Game';
 import Settings from './pages/Settings';
-import Feedbacks from './pages/Feedbacks';
+import Feedbacks from './pages/Feedback';
 import Ranking from './pages/Ranking';
 
 export default function App() {
