@@ -8,7 +8,7 @@ export const addUserInfo = (email, name) => ({
   payload: { email, name },
 });
 
-export const addScore = (score) => ({
+export const addScore = (score, assertions) => ({
   type: ADD_SCORE,
-  payload: score,
+  payload: { score, assertions },
 });

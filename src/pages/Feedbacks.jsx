@@ -1,16 +1,36 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Header from '../components/header';
 
 class Feedbacks extends Component {
+  feedbackMessage() {
+    const { assertions } = this.props;
+    const hit = 3;
+
+    if (assertions < hit) {
+      return 'Could be better...';
+    }
+    return 'Well Done!';
+  }
+
   render() {
     return (
       <div>
         <Header />
-        <p data-testid="feedback-text">Feedback</p>
+        <p>Feedback</p>
+        <div data-testid="feedback-text">{this.feedbackMessage()}</div>
       </div>
     );
   }
 }
 
-export default connect()(Feedbacks);
+Feedbacks.propTypes = {
+  assertions: PropTypes.number,
+}.isRequired;
+
+const mapStateToProps = (globalState) => ({
+  assertions: globalState.player.assertions,
+});
+
+export default connect(mapStateToProps)(Feedbacks);
