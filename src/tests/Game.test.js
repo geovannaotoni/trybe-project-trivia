@@ -1,4 +1,4 @@
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import mockData from './helpers/mockData';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
@@ -111,25 +111,34 @@ describe('Testes para a tela de Jogo', () => {
     }, 30000)
   });
 
-  it('Verifica se, ao responder as 5 questões, a pessoa usuária é redirecionada para a rota "/feedbacks"', () => {
+  it('Verifica se, caso a API retorne um código de erro, a página é redirecionada para a rota "/"', async () => {
+    global.fetch.mockRestore();
 
+    const mockDataInvalid = {
+      "response_code": 3,
+      "results": [],
+    }
+
+    global.fetch = jest.fn().mockResolvedValue({
+      json: jest.fn().mockResolvedValue(mockDataInvalid),
+    });
+
+    const { history } = renderWithRouterAndRedux(<App />);
+    const nameInput = screen.getByTestId('input-player-name');
+    const emailInput = screen.getByTestId('input-gravatar-email');
+    const buttonPlay = screen.getByRole('button', { name: /play/i })
+
+    userEvent.type(nameInput, 'Nome Teste');
+    userEvent.type(emailInput, 'test@trybe.com');
+    userEvent.click(buttonPlay);
+
+    await waitFor(() => {
+      const { pathname } = history.location;
+      expect(pathname).toBe('/game');
+    });
+
+    await waitForElementToBeRemoved(() => screen.queryByText('Carregando...'));
+    const { pathname } = history.location;
+    expect(pathname).toBe('/');
   });
-
-  // it('Verifica se, caso a API retorne um código de erro, a página é redirecionada para a rota "/"', async () => {
-  //   global.fetch.mockRestore();
-
-  //   const mockDataInvalid = {
-  //     "response_code": 3,
-  //     "results": [],
-  //   }
-
-  //   global.fetch = jest.fn().mockResolvedValue({
-  //     json: jest.fn().mockResolvedValue(mockDataInvalid),
-  //   });
-
-  //   const { history } = renderWithRouterAndRedux(<Game />);
-  //   await waitForElementToBeRemoved(() => screen.queryByText('Carregando...'));
-  //   const { pathname } = history.location;
-  //   expect(pathname).toBe('/');
-  // });
 });
