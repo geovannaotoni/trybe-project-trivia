@@ -11,15 +11,6 @@ describe('Testes para a tela de Jogo', () => {
     global.fetch = jest.fn().mockResolvedValue({
       json: jest.fn().mockResolvedValue(mockData),
     });
-
-    // renderWithRouterAndRedux(<App />);
-    // const nameInput = screen.getByTestId('input-player-name');
-    // const emailInput = screen.getByTestId('input-gravatar-email');
-    // const buttonPlay = screen.getByRole('button', { name: /play/i })
-
-    // userEvent.type(nameInput, 'Nome Teste');
-    // userEvent.type(emailInput, 'test@trybe.com');
-    // userEvent.click(buttonPlay);
   });
 
   afterEach(() => {
@@ -96,9 +87,6 @@ describe('Testes para a tela de Jogo', () => {
 
     const firstQuestion = mockData.results[0];
     const {
-      category,
-      question,
-      correct_answer: correctAnswer, 
       incorrect_answers: incorrectAnswers 
     } = firstQuestion;
 
