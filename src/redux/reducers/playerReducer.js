@@ -1,7 +1,6 @@
 import { ADD_SCORE } from '../actions';
 
 const INITIAL_STATE = {
-  questions: [],
   assertions: 0,
   score: 0,
 };

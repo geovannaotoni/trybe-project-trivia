@@ -128,7 +128,6 @@ class Game extends Component {
       nextVisible: false,
     }, this.stopTimer);
     const asnwerCheck = event.target.innerHTML === correctAnswer;
-    // Verifica se o botão clicado é diferente das respostas erradas. Caso seja, realiza a soma.
     if (asnwerCheck) {
       this.setState((prevState) => {
         const point = patternPoint + (timer * difficultyID);
