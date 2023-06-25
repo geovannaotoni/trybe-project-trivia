@@ -35,6 +35,7 @@ class Game extends Component {
   getQuestionsFromAPI = async () => {
     const { history } = this.props;
     const { response_code: responseCode, results } = await fetchApiQuestions();
+    // console.log(results);
     const ERROR_CODE = 3;
     if (responseCode === ERROR_CODE) {
       history.push('/');
@@ -77,7 +78,7 @@ class Game extends Component {
         if (prevState.timer <= 1) {
           // Se o temporizador chegou a 1 segundo ou menos, para o temporizador e desabilita os botões
           this.stopTimer();
-          return ({ buttonsDisabled: true, nextInvisible: false });
+          return { buttonsDisabled: true, nextInvisible: false };
         }
         // Atualiza o estado do componente, decrementando o valor do temporizador de 1 em 1 segundo
         return { timer: prevState.timer - 1 };
@@ -152,14 +153,11 @@ class Game extends Component {
     } else {
       this.setState((prevState) => ({
         indexQuestion: prevState.indexQuestion + 1,
-      }));
-      this.setAnswersOnState();
-      this.setState({
         nextInvisible: true,
         buttonsDisabled: false,
         btnClick: undefined,
         timer: 30,
-      });
+      }), () => this.setAnswersOnState());
       this.startTimer();
     }
   };
