@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { MoveLeft, Star } from 'lucide-react';
 import { getPlayersFromStorage } from '../services/localStorage';
+import '../styles/Ranking.css';
 
 class Ranking extends Component {
   state = {
@@ -20,34 +21,46 @@ class Ranking extends Component {
 
   render() {
     const { players } = this.state;
+    const { history } = this.props;
     return (
-      <div data-testid="ranking-title">
-        Ranking
+      <div data-testid="ranking-title" className="ranking-container">
+        <h1>
+          Ranking
+        </h1>
         <section>
           {
             players.map((player, index) => (
               <article key={ index }>
-                <img
-                  src={ `https://www.gravatar.com/avatar/${player.gravatarImg}` }
-                  alt={ player.gravatarImg }
-                  data-testid="header-profile-picture"
-                />
-                <p data-testid={ `player-name-${index}` }>{player.name}</p>
-                <p data-testid={ `player-score-${index}` }>{player.score}</p>
+                <div>
+                  <img
+                    src={ `https://www.gravatar.com/avatar/${player.gravatarImg}` }
+                    alt={ player.gravatarImg }
+                    data-testid="header-profile-picture"
+                  />
+                  <p data-testid={ `player-name-${index}` }>{player.name}</p>
+                </div>
+                <div>
+                  <Star
+                    size={ 36 }
+                    color="#ffd700"
+                    style={ { fill: '#ffd700', stroke: 'none' } }
+                  />
+                  <p data-testid={ `player-score-${index}` }>{player.score}</p>
+                  <p>points</p>
+                </div>
               </article>
             ))
           }
         </section>
-
-        <Link to="/">
-          <button
-            type="button"
-            data-testid="btn-go-home"
-          >
-            Voltar para a tela de login
-
-          </button>
-        </Link>
+        <button
+          type="button"
+          data-testid="btn-go-home"
+          className="btn-go-home"
+          onClick={ () => history.push('/') }
+        >
+          <MoveLeft />
+          Back to Login
+        </button>
       </div>
     );
   }

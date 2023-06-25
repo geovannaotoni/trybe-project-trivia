@@ -1,24 +1,18 @@
-body {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 15vmin;
-  pointer-events: none;
-}
-
-.red-border {
-  border: 1px solid red;
-}
-
-.green-border {
-  border: 1px solid green;
+.div-container {
+  align-items: center;
+  background: linear-gradient(180deg, #3c1b7a 0%, black 100%);
+  display: flex;
+  flex-direction: column;
+  font-family: Lato , sans-serif;
+  height: 100vh;
+  justify-content: center;
+  width: 100vw;
 }
 
 @media ( prefers-reduced-motion : no-preference ) {

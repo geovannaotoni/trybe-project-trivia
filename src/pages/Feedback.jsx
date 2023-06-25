@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import md5 from 'crypto-js/md5';
+import { CheckCircle, Star } from 'lucide-react';
 import Header from '../components/header';
 import { setPlayerOnStorage } from '../services/localStorage';
 import { addScore } from '../redux/actions';
+import '../styles/Feedback.css';
 
 class Feedback extends Component {
   savePlayerOnStorage = () => {
@@ -31,27 +32,49 @@ class Feedback extends Component {
   }
 
   render() {
-    const { assertions, score } = this.props;
+    const { assertions, score, history } = this.props;
     return (
-      <div>
+      <>
         <Header />
-        <p>Feedback</p>
-        <p>Your Score</p>
-        <span data-testid="feedback-total-score">{ score }</span>
-        <p>Your Assertions</p>
-        <span data-testid="feedback-total-question">{ assertions }</span>
-        <div data-testid="feedback-text">{this.feedbackMessage()}</div>
-        <Link to="/" data-testid="btn-play-again">
-          <button type="button">Play Again</button>
-        </Link>
-        <button
-          type="button"
-          data-testid="btn-ranking"
-          onClick={ this.savePlayerOnStorage }
-        >
-          Ranking
-        </button>
-      </div>
+        <section className="feedback-container">
+          <h3>Feedback</h3>
+          <div>
+            <article>
+              <Star />
+              <p>Your Score:</p>
+              <span data-testid="feedback-total-score">{ score }</span>
+            </article>
+            <article>
+              <CheckCircle />
+              <p>Your Assertions:</p>
+              <span data-testid="feedback-total-question">{ assertions }</span>
+            </article>
+          </div>
+          <div
+            data-testid="feedback-text"
+            className="feedback-text"
+          >
+            {this.feedbackMessage()}
+          </div>
+          <img src="https://blog.megajogos.com.br/wp-content/uploads/2019/01/think-about-it-meme-e1552409270257.jpg" alt="" />
+        </section>
+        <div className="button-container">
+          <button
+            type="button"
+            data-testid="btn-play-again"
+            onClick={ () => history.push('/') }
+          >
+            Play Again
+          </button>
+          <button
+            type="button"
+            data-testid="btn-ranking"
+            onClick={ this.savePlayerOnStorage }
+          >
+            Ranking
+          </button>
+        </div>
+      </>
     );
   }
 }
