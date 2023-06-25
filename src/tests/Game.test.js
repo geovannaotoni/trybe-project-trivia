@@ -19,7 +19,7 @@ describe('Testes para a tela de Jogo', () => {
 
   it('Verifica se a tela de Jogo renderiza a questão correta, as alternativas e o timer', async () => {
     renderWithRouterAndRedux(<Game />);
-    await waitForElementToBeRemoved(() => screen.getByText('Carregando...'));
+    await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
     const firstQuestion = mockData.results[0];
     const {
       category,
@@ -39,7 +39,7 @@ describe('Testes para a tela de Jogo', () => {
   it('Verifica se ao clicar em alguma alternativa, os botões são desabilitados e o botão de Next é renderizado', async () => {
     renderWithRouterAndRedux(<Game />);
     expect(screen.queryByTestId("btn-next")).not.toBeInTheDocument();
-    await waitForElementToBeRemoved(() => screen.getByText('Carregando...'));
+    await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
     const correctBtn = screen.getByTestId("correct-answer");
     userEvent.click(correctBtn);
     expect(screen.getByTestId("btn-next")).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('Testes para a tela de Jogo', () => {
   it('Verifica se, ao clicar em uma alternativa correta, o score é atualizado', async () => {
     renderWithRouterAndRedux(<Game />);
     expect(screen.queryByTestId("header-score")).toHaveTextContent(0)
-    await waitForElementToBeRemoved(() => screen.getByText('Carregando...'));
+    await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
 
     // teste para questão nível hard: score (10 + 30*3 = 100)
     const correctBtnOne = screen.getByTestId("correct-answer");
@@ -74,7 +74,7 @@ describe('Testes para a tela de Jogo', () => {
 
   it('Verifica se o timer é atualizado', async () => {
     renderWithRouterAndRedux(<Game />);
-    await waitForElementToBeRemoved(() => screen.getByText('Carregando...'));
+    await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
     expect(screen.getByText(/timer: 30 seconds/i)).toBeInTheDocument();
 
     expect(await screen.findByText(/timer: 29 seconds/i)).toBeInTheDocument();
@@ -82,7 +82,7 @@ describe('Testes para a tela de Jogo', () => {
 
   it('Verifica se, ao aguardar 30 segundos, os botões são desativados', async () => {
     renderWithRouterAndRedux(<Game />);
-    await waitForElementToBeRemoved(() => screen.getByText('Carregando...'));
+    await waitForElementToBeRemoved(() => screen.getByText('Loading...'));
     expect(screen.getByText(/timer: 30 seconds/i)).toBeInTheDocument();
 
     const firstQuestion = mockData.results[0];
@@ -125,7 +125,7 @@ describe('Testes para a tela de Jogo', () => {
       expect(pathname).toBe('/game');
     });
 
-    await waitForElementToBeRemoved(() => screen.queryByText('Carregando...'));
+    await waitForElementToBeRemoved(() => screen.queryByText('Loading...'));
     const { pathname } = history.location;
     expect(pathname).toBe('/');
   });

@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Gamepad2 } from 'lucide-react';
 import { fetchToken } from '../services/fetchAPI';
 import { setTokenOnStorage } from '../services/localStorage';
 import { addUserInfo } from '../redux/actions';
+import '../styles/Login.css';
 
 class Login extends Component {
   state = {
@@ -47,12 +49,16 @@ class Login extends Component {
   render() {
     const { name, email, btnDisabled } = this.state;
     return (
-      <div>
+      <div className="login-container">
+        <section className="title-animation">
+          <Gamepad2 size={ 48 } />
+          <p>Trivia Game</p>
+        </section>
         <input
           type="text"
           name="name"
           value={ name }
-          placeholder="Digite seu nome"
+          placeholder="Your Name"
           data-testid="input-player-name"
           onChange={ this.handleChange }
         />
@@ -60,7 +66,7 @@ class Login extends Component {
           type="email"
           name="email"
           value={ email }
-          placeholder="Digite seu e-mail"
+          placeholder="Your E-mail"
           data-testid="input-gravatar-email"
           onChange={ this.handleChange }
         />
@@ -69,6 +75,7 @@ class Login extends Component {
           data-testid="btn-play"
           onClick={ this.handleClickPlay }
           disabled={ btnDisabled }
+          className="btn-play"
         >
           Play
         </button>
@@ -76,6 +83,7 @@ class Login extends Component {
           type="button"
           data-testid="btn-settings"
           onClick={ this.handleClickSettings }
+          className="btn-settings"
         >
           Settings
         </button>

@@ -1,0 +1,94 @@
+.ranking-container {
+  align-items: center;
+  background-color: white;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  min-height: 55vh;
+  padding: 2rem 0.5rem;
+  position: relative;
+  text-align: center;
+  width: 50vw;
+}
+
+.ranking-container h1 {
+  background-color: #2fc18c;
+  border-radius: 1rem;
+  color: white;
+  font-family: Epilogue , sans-serif;
+  padding: 1rem 0;
+  position: absolute;
+  text-transform: uppercase;
+  top: -20px;
+  width: 80%;
+}
+
+.ranking-container section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  min-height: 50%;
+  width: 80%;
+}
+
+.ranking-container section article {
+  align-items: center;
+  background-color: #ebebeb;
+  border-radius: 1rem;
+  display: flex;
+  height: 4rem;
+  justify-content: space-between;
+  padding: 0.7rem;
+}
+
+.ranking-container section article div {
+  align-items: center;
+  display: flex;
+  gap: 0.5em;
+  width: 50%;
+}
+
+.ranking-container > section > article > div:last-of-type {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 4px 0 #00000040;
+  gap: 0.2em;
+  justify-content: center;
+  padding: 0.3rem;
+}
+
+.ranking-container img {
+  border-radius: 50%;
+  max-width: 50px;
+}
+
+.btn-go-home {
+  align-items: center;
+  background-color: #00d5e2;
+  border: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 4px 0 #00000040;
+  color: white;
+  display: flex;
+  font-family: Epilogue , sans-serif;
+  font-weight: 700;
+  gap: 0.1rem;
+  justify-content: center;
+  padding: 0.7rem 0;
+  text-transform: uppercase;
+  width: 80%;
+}
+
+@media screen and ( max-width : 600px ) {
+
+  .ranking-container {
+    width: 90%;
+  }
+
+  .ranking-container section, .btn-go-home {
+    width: 95%;
+  }
+}

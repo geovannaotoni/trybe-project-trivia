@@ -18,12 +18,12 @@ const mockData = {
       "incorrect_answers":["2","4","5"]
     },
     {
-      "category":"Entertainment: Film",
+      "category":"Entertainment: Video Games",
       "type":"multiple",
       "difficulty":"easy",
-      "question":"In which film does Humphrey Bogart say the famous line, &quot;Here&#039;s looking at you, kid&quot;?",
-      "correct_answer":"Casablanca",
-      "incorrect_answers":["The Maltese Falcon", "The Treasure of the Sierra Madre", "Citizen Kane"]
+      "question":"Which character was introduced to the Super Smash Bros franchise in Super Smash Bros Melee?",
+      "correct_answer":"Sheik",
+      "incorrect_answers":["Samus","Lucas","Mega Man"]
     },
     {
       "category":"Entertainment: Television",
@@ -34,13 +34,13 @@ const mockData = {
       "incorrect_answers":["Roman Reigns","AJ Styles","Dean Ambrose"]
     },
     {
-      "category":"Entertainment: Video Games",
+      "category":"Entertainment: Film",
       "type":"multiple",
       "difficulty":"easy",
-      "question":"Which character was introduced to the Super Smash Bros franchise in Super Smash Bros Melee?",
-      "correct_answer":"Sheik",
-      "incorrect_answers":["Samus","Lucas","Mega Man"]
-    }
+      "question":"In which film does Humphrey Bogart say the famous line, &quot;Here&#039;s looking at you, kid&quot;?",
+      "correct_answer":"Casablanca",
+      "incorrect_answers":["The Maltese Falcon", "The Treasure of the Sierra Madre", "Citizen Kane"]
+    },
   ]
 }
 

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { Timer } from 'lucide-react';
 import Header from '../components/header';
 import { fetchApiQuestions } from '../services/fetchAPI';
 import '../styles/Game.css';
@@ -19,7 +20,7 @@ class Game extends Component {
     score: 0,
     assertions: 0,
     buttonsDisabled: false,
-    nextVisible: true,
+    nextInvisible: true,
   };
 
   async componentDidMount() {
@@ -76,7 +77,7 @@ class Game extends Component {
         if (prevState.timer <= 1) {
           // Se o temporizador chegou a 1 segundo ou menos, para o temporizador e desabilita os botões
           this.stopTimer();
-          return { buttonsDisabled: true };
+          return ({ buttonsDisabled: true, nextInvisible: false });
         }
         // Atualiza o estado do componente, decrementando o valor do temporizador de 1 em 1 segundo
         return { timer: prevState.timer - 1 };
@@ -125,7 +126,7 @@ class Game extends Component {
     const difficultyID = this.difficultyCheck();
     this.setState({
       btnClick: true,
-      nextVisible: false,
+      nextInvisible: false,
     }, this.stopTimer);
     const asnwerCheck = event.target.innerHTML === correctAnswer;
     if (asnwerCheck) {
@@ -154,7 +155,7 @@ class Game extends Component {
       }));
       this.setAnswersOnState();
       this.setState({
-        nextVisible: true,
+        nextInvisible: true,
         buttonsDisabled: false,
         btnClick: undefined,
         timer: 30,
@@ -171,59 +172,65 @@ class Game extends Component {
       btnClick,
       timer,
       buttonsDisabled,
-      nextVisible } = this.state;
+      nextInvisible } = this.state;
 
     if (questions.length === 0) {
       return (
-        <div>
+        <>
           <Header />
-          <p>Carregando...</p>
-        </div>
+          <p className="question-container">Loading...</p>
+        </>
       );
     }
 
     const { category, question } = questions[indexQuestion];
 
     return (
-      <div>
+      <>
         <Header />
-        <p data-testid="question-category">{category}</p>
-        <p data-testid="question-text">{question}</p>
-        <p>
-          Timer:
-          {' '}
-          {timer}
-          {' '}
-          seconds
-        </p>
-        <div data-testid="answer-options">
-          {shuffledOptions.map((option, index) => (
-            <button
-              key={ index }
-              type="button"
-              data-testid={ option
-                === correctAnswer ? 'correct-answer' : `wrong-answer-${index}` }
-              onClick={ this.handleClick }
-              className={ btnClick && (option
-                === correctAnswer ? 'correct' : 'incorrect') }
-              disabled={ buttonsDisabled }
-            >
-              {option}
-            </button>
-          ))}
-          { nextVisible ? (
-            <div />
-          ) : (
-            <button
-              value="Next"
-              onClick={ this.nextQuestion }
-              data-testid="btn-next"
-            >
-              Next
-            </button>
-          )}
-        </div>
-      </div>
+        <section className="question-container">
+          <p data-testid="question-category">{category}</p>
+          <p
+            data-testid="question-text"
+            dangerouslySetInnerHTML={ { __html: question } }
+          />
+          <p className="timer">
+            <Timer size={ 20 } />
+            Timer:
+            {' '}
+            {timer}
+            {' '}
+            seconds
+          </p>
+          <div data-testid="answer-options" className="answer-options">
+            {shuffledOptions.map((option, index) => (
+              <button
+                key={ index }
+                type="button"
+                data-testid={ option
+                  === correctAnswer ? 'correct-answer' : `wrong-answer-${index}` }
+                onClick={ this.handleClick }
+                className={ btnClick && (option
+                  === correctAnswer ? 'correct' : 'incorrect') }
+                disabled={ buttonsDisabled }
+              >
+                {option}
+              </button>
+            ))}
+            { nextInvisible ? (
+              <div />
+            ) : (
+              <button
+                value="Next"
+                onClick={ this.nextQuestion }
+                data-testid="btn-next"
+              >
+                Next
+              </button>
+            )}
+          </div>
+        </section>
+      </>
     );
   }
 }
